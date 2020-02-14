@@ -13,6 +13,10 @@
       color: $primary-color;
       font-size: 4vw;
       border-bottom: 2px solid $primary-color;
+
+      span {
+        color: $secondary-color;
+      }
     }
 
     td {
