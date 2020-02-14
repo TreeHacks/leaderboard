@@ -12,9 +12,11 @@ class Leaderboard extends React.Component {
       user_json: [],
       display_number: 0,
       display_options: [],
-      display_data: []
+      display_data: [],
+      mode: "normal"
     }
     window.setInterval(this.iterateDisplayNumber.bind(this), 8000);
+    window.setInterval(this.componentDidMount.bind(this), 30000);
   }
 
   iterateDisplayNumber() {
@@ -93,16 +95,29 @@ class Leaderboard extends React.Component {
     console.log(user_list)
     console.log(display_options)
     console.log(display_data)
-    this.setState({user_json: user_list, display_options: display_options, display_data: display_data});
+    this.setState({
+      user_json: user_list,
+      display_options: display_options,
+      display_data: display_data
+    });
   }
 
 
   render () {
     let tableClasses = ["dark", "light"];
-    let categoryIndex = this.state.display_number % this.state.display_options.length;
-    let category = this.state.display_options[categoryIndex];
-    let displayData = this.state.display_data[categoryIndex];
-    console.log(displayData);
+    let categoryIndex, category, displayData;
+    if (this.state.mode == "registration") {
+      categoryIndex = 0;
+      category = "Registered";
+      displayData = this.state.display_data[categoryIndex];
+      console.log(displayData);
+    } else {
+      categoryIndex = this.state.display_number % this.state.display_options.length;
+      category = this.state.display_options[categoryIndex];
+      displayData = this.state.display_data[categoryIndex];
+      console.log(displayData);
+    }
+
     if (this.state.user_json.length == 0) {
       return <Loading />;
     }
@@ -118,6 +133,7 @@ class Leaderboard extends React.Component {
           <table cellSpacing="0">
             <thead>
               <tr>
+                <th></th>
                 <th>Name</th>
                 <th># <span>{category}</span> Attended</th>
               </tr>
@@ -125,13 +141,12 @@ class Leaderboard extends React.Component {
             <tbody>
               {displayData["data"].map((datapoint, index) =>
                 <tr className={tableClasses[index % 2]}>
+                  <td className="rank">{index + 1}.</td>
                   <td>
                     <img src={datapoint["picture"]} />
                     {datapoint["name"]}
                   </td>
-                  <td>
-                    {datapoint["attendance"]}
-                  </td>
+                  <td>{datapoint["attendance"]}</td>
                 </tr>
               )}
             </tbody>
