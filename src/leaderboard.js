@@ -72,13 +72,6 @@ class Leaderboard extends React.Component {
             name: user_name,
             attendance: user["attendance"][category]
           })
-        } else {
-          ordered_data.push({
-            id: user["user"]["id"],
-            picture: user_picture,
-            name: user_name,
-            attendance: 0
-          })
         }
       });
       ordered_data.sort(
