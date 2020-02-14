@@ -30,7 +30,8 @@ class Leaderboard extends React.Component {
 
 
   render () {
-    let columns = ["", "Name", "# Attended"]
+    let columns = ["Name", "# Attended"]
+    let tableClasses = ["dark", "light"];
     if (this.state.user_json.length == 0) {
       return <Loading />;
     }
@@ -39,13 +40,11 @@ class Leaderboard extends React.Component {
         <div id="leaderboard">
           <div className="header">
             <img src={logo} alt="treehacks small logo" />
-            <div className="header">
               <span className="logo-text-tree">tree</span>
               <span className="logo-text-hacks">hacks</span>
               <span className="logo-text-leaderboard">leaderboard</span>
-            </div>
           </div>
-          <table>
+          <table cellspacing="0">
             <thead>
               <tr>
                 {columns.map(column => (
@@ -54,12 +53,10 @@ class Leaderboard extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.user_json.map(datapoint => (
-                <tr>
+              {this.state.user_json.map((datapoint, index) => (
+                <tr className={tableClasses[index % 2]}>
                   <td>
                     {datapoint["forms"]["meet_info"]["profilePicture"] && <img src={datapoint["forms"]["meet_info"]["profilePicture"]} />}
-                  </td>
-                  <td>
                     {datapoint["forms"]["application_info"]["first_name"] && datapoint["forms"]["application_info"]["first_name"]} {datapoint["forms"]["application_info"]["last_name"] && datapoint["forms"]["application_info"]["last_name"].charAt(0)}
                   </td>
                   <td>
