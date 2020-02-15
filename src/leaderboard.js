@@ -71,6 +71,7 @@ class Leaderboard extends React.Component {
             </thead>
             <tbody>
               {displayData.map((datapoint, index) =>
+                datapoint &&
                 <tr className={tableClasses[index % 2]}>
                   <td className="rank">{index + 1}.</td>
                   <td>
