@@ -41,6 +41,7 @@ class Leaderboard extends React.Component {
     console.log(user_list);
 
     const leaderboard_body = await API.get("treehacks", "/leaderboard", {});
+    console.log(leaderboard_body);
     let display_options = [];
     for (var key in leaderboard_body["data"]) {
       var user_id = leaderboard_body["data"][key]["data"]["data_1580776107879"]
