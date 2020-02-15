@@ -44,8 +44,8 @@ class Leaderboard extends React.Component {
     let tableClasses = ["dark", "light"];
     let category = this.state.event_types[this.state.display_number % this.state.event_types.length];
     let displayData = this.state.data[this.state.display_number % this.state.event_types.length] && this.state.data[this.state.display_number % this.state.event_types.length]["data"];
-    displayData = displayData && displayData.map(datapoint =>
-      datapoint["first_name"] && datapoint["first_name"].length > 0 && datapoint
+    displayData = displayData && displayData.filter(datapoint =>
+      datapoint["first_name"] && datapoint["first_name"].length > 0
     );
     console.log(displayData);
 
@@ -71,7 +71,6 @@ class Leaderboard extends React.Component {
             </thead>
             <tbody>
               {displayData.map((datapoint, index) =>
-                datapoint &&
                 <tr className={tableClasses[index % 2]}>
                   <td className="rank">{index + 1}.</td>
                   <td>
