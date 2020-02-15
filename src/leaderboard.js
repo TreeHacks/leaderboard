@@ -9,11 +9,8 @@ class Leaderboard extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      user_json: [],
-      display_number: 0,
-      display_options: [],
-      display_data: [],
-      mode: "normal"
+      data: [],
+      event_types: []
     }
     window.setInterval(this.iterateDisplayNumber.bind(this), 8000);
     window.setInterval(this.componentDidMount.bind(this), 30000);
@@ -29,90 +26,27 @@ class Leaderboard extends React.Component {
   }
 
   async componentDidMount() {
-    const users_body = await API.get("treehacks", "/users", {});
-    let user_list = [];
-    users_body["results"].map(
-      one_user_json =>
-        one_user_json.year == 2020 &&
-        one_user_json.status == "admitted" &&
-        one_user_json["forms"]["application_info"]["first_name"] &&
-        user_list.push(one_user_json)
-    );
-    console.log(user_list);
-
     const leaderboard_body = await API.get("treehacks", "/leaderboard", {});
     console.log(leaderboard_body);
-    let display_options = [];
-    for (var key in leaderboard_body["data"]) {
-      var user_id = leaderboard_body["data"][key]["data"]["data_1580776107879"]
-      var data = leaderboard_body["data"][key]["attendance"];
-      Object.keys(data).map(key =>
-        !display_options.includes(key) && display_options.push(key)
-      );
-      user_list.map(user =>
-        user_id == user["user"]["id"] && (user["attendance"] = data)
-      );
-    }
-
-    let display_data = [];
-    display_options.forEach(category => {
-      let ordered_data = [];
-      user_list.map(user => {
-        let user_picture = null;
-        if (user["forms"]["meet_info"]) {
-          user_picture = user["forms"]["meet_info"]["profilePicture"];
-        }
-        let user_name = user["forms"]["application_info"]["first_name"];
-        if (user["forms"]["application_info"]["last_name"]) {
-          user_name += " " + user["forms"]["application_info"]["last_name"].charAt(0);
-        }
-        if (user["attendance"]) {
-          ordered_data.push({
-            id: user["user"]["id"],
-            picture: user_picture,
-            name: user_name,
-            attendance: user["attendance"][category]
-          })
-        }
-      });
-      ordered_data.sort(
-        function (a,b) {
-          return b["attendance"] - a["attendance"];
-        }
-      );
-      display_data.push({
-        category: category,
-        data: ordered_data
-      });
-    });
-
-    console.log(user_list)
-    console.log(display_options)
-    console.log(display_data)
+    let event_types = [];
+    leaderboard_body.forEach(event =>
+      event_types.push(event.type)
+    );
+    console.log(event_types);
     this.setState({
-      user_json: user_list,
-      display_options: display_options,
-      display_data: display_data
+      data: leaderboard_body.data,
+      event_types: event_types
     });
   }
 
 
   render () {
     let tableClasses = ["dark", "light"];
-    let categoryIndex, category, displayData;
-    if (this.state.mode == "registration") {
-      categoryIndex = 0;
-      category = "Registered";
-      displayData = this.state.display_data[categoryIndex];
-      console.log(displayData);
-    } else {
-      categoryIndex = this.state.display_number % this.state.display_options.length;
-      category = this.state.display_options[categoryIndex];
-      displayData = this.state.display_data[categoryIndex];
-      console.log(displayData);
-    }
+    let category = this.state.event_types[this.state.display_number % this.state.event_types.length];
+    let displayData = this.state.data[this.state.display_number % this.state.event_types.length];
+    console.log(displayData);
 
-    if (this.state.user_json.length == 0) {
+    if (this.state.data.length == 0) {
       return <Loading />;
     }
     else {
@@ -133,7 +67,7 @@ class Leaderboard extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {displayData["data"].map((datapoint, index) =>
+              {displayData.map((datapoint, index) =>
                 <tr className={tableClasses[index % 2]}>
                   <td className="rank">{index + 1}.</td>
                   <td>
