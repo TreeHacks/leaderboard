@@ -10,7 +10,8 @@ class Leaderboard extends React.Component {
     super(props);
     this.state = {
       data: [],
-      event_types: []
+      event_types: [],
+      display_number: 0
     }
     window.setInterval(this.iterateDisplayNumber.bind(this), 8000);
     window.setInterval(this.componentDidMount.bind(this), 30000);
@@ -26,7 +27,8 @@ class Leaderboard extends React.Component {
   }
 
   async componentDidMount() {
-    const leaderboard_body = await API.get("treehacks", "/leaderboard", {});
+    //const leaderboard_body = await API.get("treehacks", "/leaderboard", {});
+    const leaderboard_body = {data: [{type: "HackX", data:  [{id: "2e747be1-52bd-4a63-8387-848169226547", num: 5},{id: "2e747be1-52bd-4a63-8387-848169226547", num: 5}]}]};
     let event_types = [];
     leaderboard_body["data"].forEach(event =>
       event_types.push(event["type"])
@@ -42,10 +44,9 @@ class Leaderboard extends React.Component {
   render () {
     let tableClasses = ["dark", "light"];
     let category = this.state.event_types[this.state.display_number % this.state.event_types.length];
-    let displayData = this.state.data[this.state.display_number % this.state.event_types.length];
-    console.log(displayData);
+    let displayData = this.state.data[this.state.display_number % this.state.event_types.length] && this.state.data[this.state.display_number % this.state.event_types.length]["data"];
 
-    if (this.state.data.length == 0) {
+    if (this.state.data.length <= 0) {
       return <Loading />;
     }
     else {
@@ -70,10 +71,10 @@ class Leaderboard extends React.Component {
                 <tr className={tableClasses[index % 2]}>
                   <td className="rank">{index + 1}.</td>
                   <td>
-                    <img src={datapoint["picture"]} />
-                    {datapoint["name"]}
+                    {datapoint["picture"] && <img src={datapoint["picture"]} />}
+                    {datapoint["name"] && datapoint["name"]}
                   </td>
-                  <td>{datapoint["attendance"]}</td>
+                  <td>{datapoint["num"]}</td>
                 </tr>
               )}
             </tbody>
