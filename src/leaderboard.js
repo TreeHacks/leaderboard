@@ -44,6 +44,9 @@ class Leaderboard extends React.Component {
     let tableClasses = ["dark", "light"];
     let category = this.state.event_types[this.state.display_number % this.state.event_types.length];
     let displayData = this.state.data[this.state.display_number % this.state.event_types.length] && this.state.data[this.state.display_number % this.state.event_types.length]["data"];
+    displayData = displayData && displayData.map(datapoint =>
+      datapoint["first_name"] && datapoint["first_name"].length > 0 && datapoint
+    );
     console.log(displayData);
 
     if (this.state.data.length <= 0) {
