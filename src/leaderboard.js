@@ -27,14 +27,13 @@ class Leaderboard extends React.Component {
 
   async componentDidMount() {
     const leaderboard_body = await API.get("treehacks", "/leaderboard", {});
-    console.log(leaderboard_body);
     let event_types = [];
     leaderboard_body.forEach(event =>
-      event_types.push(event.type)
+      event_types.push(event["type"])
     );
     console.log(event_types);
     this.setState({
-      data: leaderboard_body.data,
+      data: leaderboard_body["data"],
       event_types: event_types
     });
   }
