@@ -27,8 +27,7 @@ class Leaderboard extends React.Component {
   }
 
   async componentDidMount() {
-    //const leaderboard_body = await API.get("treehacks", "/leaderboard", {});
-    const leaderboard_body = {data: [{type: "HackX", data:  [{id: "2e747be1-52bd-4a63-8387-848169226547", num: 5},{id: "2e747be1-52bd-4a63-8387-848169226547", num: 5}]}]};
+    const leaderboard_body = await API.get("treehacks", "/leaderboard", {});
     let event_types = [];
     leaderboard_body["data"].forEach(event =>
       event_types.push(event["type"])
